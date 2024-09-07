@@ -17,8 +17,8 @@ public class PlayersListCommand implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         
+        sender.sendMessage("Local Players:");
         for(ConnectedPlayer p : mPlayersList.getPlayers()) {
-            sender.sendMessage("Local Players:");
             sender.sendMessage(" -" + p.getPseudo() + " kills:" + p.getNumberOfKills() + " deaths:" + p.getNumberOfDeaths());
         }
 
