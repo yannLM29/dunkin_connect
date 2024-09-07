@@ -39,7 +39,7 @@ public class ConnectedPlayersList {
         return true;
     }
 
-    void removePlayer(String inPseudo) {
+    public void removePlayer(String inPseudo) {
         mPlayers.removeIf(player -> player.getPseudo().equals(inPseudo));
     }
 }
