@@ -1,4 +1,4 @@
 name: dunkin_connect
-main: fr.yannlm29.dunkin_connect.Plugin
+main: fr.yannlm29.Plugin
 version: 0.0.1
 api-version: 1.15
