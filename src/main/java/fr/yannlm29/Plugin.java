@@ -12,6 +12,8 @@ public class Plugin extends JavaPlugin
 
   public void onEnable()
   {
+    getServer().getPluginManager().registerEvents(new ConnectionEventListener(), this);
+
     LOGGER.info("dunkin_connect enabled");
   }
 
