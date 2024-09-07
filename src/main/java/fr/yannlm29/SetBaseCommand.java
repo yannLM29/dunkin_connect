@@ -23,6 +23,7 @@ public class SetBaseCommand implements CommandExecutor{
             double z = player.getLocation().getZ();
 
             mDbConnector.updateBasePosition(player.getName(), x, y, z);
+            player.sendMessage("New base position set: " + (int)x + ", " + (int)y + ", " + (int)z);
         }
         
         return false;
