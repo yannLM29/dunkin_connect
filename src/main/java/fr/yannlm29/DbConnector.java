@@ -17,8 +17,8 @@ public class DbConnector {
         if(inIp == null || inUsername == null || inPassword == null) {
             throw new Exception("Database config is wrong");
         }
-
-        String url = "jdbc:mysql://" + inIp + ":" + inPassword + "/dunkin_connect_db";
+        
+        String url = "jdbc:mysql://" + inIp + ":" + inPort + "/dunkin_connect_db";
 
         Class.forName("com.mysql.cj.jdbc.Driver");
         mConnection = DriverManager.getConnection(url, inUsername, inPassword);

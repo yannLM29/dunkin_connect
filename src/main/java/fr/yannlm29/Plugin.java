@@ -19,6 +19,7 @@ public class Plugin extends JavaPlugin
 
     mConfigFile = new ConfigFile(this);
     mPlayersList = new ConnectedPlayersList();
+    mDbConnector = new DbConnector();
   }
 
   public void onEnable() {
@@ -40,7 +41,7 @@ public class Plugin extends JavaPlugin
         mConfigFile.get().getString("database.user"),
         mConfigFile.get().getString("database.password"));
     } catch (Exception e) {
-      LOGGER.warning("Cannot connect to database");
+      LOGGER.warning("Cannot connect to database: " + e.getMessage());
       this.getPluginLoader().disablePlugin(this);
     }
     
