@@ -28,17 +28,17 @@ public class DbConnector {
     }
 
     // -------------------- GET --------------------
-    public ArrayList<String> getPlayerList() {
-        ArrayList<String> players = new ArrayList<String>();
+    public ArrayList<DbPlayer> getPlayerList() {
+        ArrayList<DbPlayer> players = new ArrayList<DbPlayer>();
 
         try {
             Statement statement = mConnection.createStatement();
-            String sql_get_all_players_query = "SELECT pseudo FROM players";
+            String sql_get_all_players_query = "SELECT pseudo, nb_of_kills, nb_of_deaths FROM players";
 
             ResultSet result = statement.executeQuery(sql_get_all_players_query);
 
             while(result.next()) {
-                players.add(result.getString("pseudo"));
+                players.add(new DbPlayer(result.getString("pseudo"), result.getInt("nb_of_kills"), result.getInt("nb_of_deaths")));
             }
 
             return players;
