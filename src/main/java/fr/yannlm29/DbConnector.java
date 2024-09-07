@@ -27,6 +27,7 @@ public class DbConnector {
         mConnection = DriverManager.getConnection(url, inUsername, inPassword);
     }
 
+    // -------------------- GET --------------------
     public ArrayList<String> getPlayerList() {
         ArrayList<String> players = new ArrayList<String>();
 
@@ -47,6 +48,36 @@ public class DbConnector {
             return null;
         }
     }
+
+    public DbPlayer getPlayerInfo(String inPseudo) {
+        if(!isPlayerInDb(inPseudo)) {
+            LOGGER.info("Player not found: " + inPseudo);
+            return null;
+        }
+
+        String sql_get_player_query = "SELECT pseudo, nb_of_kills, nb_of_deaths FROM players WHERE pseudo = ?";
+        try {
+            PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
+            prepared_statement.setString(1, inPseudo);
+
+            ResultSet result = prepared_statement.executeQuery();
+
+            if(result.next()) {
+                DbPlayer p = new DbPlayer();
+
+                p.mPseudo = result.getString("pseudo");
+                p.mNumberOfKills = result.getInt("nb_of_kills");
+                p.mNumberOfDeaths = result.getInt("nb_of_deaths");
+
+                return p;
+            }
+
+        } catch (Exception e) {
+            LOGGER.info("error getPlayerInfo: " + e.getMessage());
+        }
+
+        return null;
+    }
     
     public Boolean isPlayerInDb(String inPseudo) {
         String sql_get_player_query = "SELECT id, pseudo FROM players WHERE pseudo = ?";
@@ -64,6 +95,7 @@ public class DbConnector {
         }
     }
 
+    // -------------------- SET --------------------
     public Boolean addPlayer(String inPseudo) {
         String sql_get_player_query = "INSERT INTO players (pseudo) VALUES (?)";
         try {
@@ -73,6 +105,25 @@ public class DbConnector {
             int result = prepared_statement.executeUpdate();
             
             // LOGGER.info("res=" + );
+            return true;
+
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+            return false;
+        }
+    }
+
+    public Boolean updatePlayer(String inPseudo, int inNbOfKills, int inNbOfDeath) {
+        
+        String sql_get_player_query = "UPDATE players SET nb_of_kills = ?, nb_of_deaths = ? WHERE pseudo = ?";
+
+        try {
+            PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
+            prepared_statement.setInt(1, inNbOfKills);
+            prepared_statement.setInt(2, inNbOfDeath);
+            prepared_statement.setString(3, inPseudo);
+
+            int result = prepared_statement.executeUpdate();
             return true;
 
         } catch (Exception e) {

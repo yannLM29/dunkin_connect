@@ -34,6 +34,15 @@ public class ConnectionEventListener implements Listener{
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        mPlayersList.removePlayer(event.getPlayer().getName());
+        String pseudo = event.getPlayer().getName();
+
+        DbPlayer db_player = mDbConnector.getPlayerInfo(pseudo);
+        ConnectedPlayer connected_player = mPlayersList.getPlayer(pseudo);
+
+        int nb_of_kills = db_player.mNumberOfKills + connected_player.getNumberOfKills();
+        int nb_of_deaths = db_player.mNumberOfDeaths + connected_player.getNumberOfDeaths();
+        mDbConnector.updatePlayer(pseudo, nb_of_kills, nb_of_deaths);
+
+        mPlayersList.removePlayer(pseudo);
     }
 }
