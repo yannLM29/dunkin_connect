@@ -134,6 +134,26 @@ public class DbConnector {
             return false;
         }
     }
+    
+    public Boolean updateBasePosition(String inPseudo, double inX, double inY, double inZ) {
+        
+        String sql_get_player_query = "UPDATE players SET pos_x = ?, pos_y = ?, pos_z = ? WHERE pseudo = ?";
+
+        try {
+            PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
+            prepared_statement.setInt(1, (int)inX);
+            prepared_statement.setInt(2, (int)inY);
+            prepared_statement.setInt(3, (int)inZ);
+            prepared_statement.setString(4, inPseudo);
+
+            int result = prepared_statement.executeUpdate();
+            return true;
+
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+            return false;
+        }
+    }
 
     public Boolean addSession(String inPseudo, Date inStart, long inDuration) {
         String sql_get_player_query = "INSERT INTO session (pseudo, start, duration) VALUES (?, ?, ?)";
