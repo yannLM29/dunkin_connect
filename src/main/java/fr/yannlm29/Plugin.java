@@ -1,6 +1,8 @@
 package fr.yannlm29;
 
 import java.util.logging.Logger;
+
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /*
@@ -45,7 +47,8 @@ public class Plugin extends JavaPlugin
 
     // Commands
     this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList, mDbConnector));
-    
+    this.getCommand("setBase").setExecutor(new SetBaseCommand(mDbConnector));
+
     // Log "enable"
     LOGGER.info("dunkin_connect enabled");
   }
