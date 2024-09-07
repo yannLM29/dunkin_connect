@@ -2,6 +2,7 @@ package fr.yannlm29;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import java.util.Date;
 
 import org.bukkit.Bukkit;
 
@@ -11,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
 public class DbConnector {
 
     private static final Logger LOGGER=Logger.getLogger("dunkin_connect");
@@ -122,6 +125,29 @@ public class DbConnector {
             prepared_statement.setInt(1, inNbOfKills);
             prepared_statement.setInt(2, inNbOfDeath);
             prepared_statement.setString(3, inPseudo);
+
+            int result = prepared_statement.executeUpdate();
+            return true;
+
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+            return false;
+        }
+    }
+
+    public Boolean addSession(String inPseudo, Date inStart, long inDuration) {
+        String sql_get_player_query = "INSERT INTO session (pseudo, start, duration) VALUES (?, ?, ?)";
+        
+        LOGGER.info("addSession with " + inStart + " " + inDuration);
+        try {
+            PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
+            prepared_statement.setString(1, inPseudo);
+            prepared_statement.setTimestamp(2, new Timestamp(inStart.getTime()));
+
+            int hours = (int) (inDuration / 3600000);
+            int minutes = (int) ((inDuration % 3600000) / 60000);
+            int seconds = (int) ((inDuration % 60000) / 1000);
+            prepared_statement.setTime(3, new Time(hours, minutes, seconds));   //TODO: Needs rework
 
             int result = prepared_statement.executeUpdate();
             return true;

@@ -42,6 +42,7 @@ public class ConnectionEventListener implements Listener{
         int nb_of_kills = db_player.mNumberOfKills + connected_player.getNumberOfKills();
         int nb_of_deaths = db_player.mNumberOfDeaths + connected_player.getNumberOfDeaths();
         mDbConnector.updatePlayer(pseudo, nb_of_kills, nb_of_deaths);
+        mDbConnector.addSession(pseudo, connected_player.getSessionStart(), connected_player.getSessionDuration());
 
         mPlayersList.removePlayer(pseudo);
     }
