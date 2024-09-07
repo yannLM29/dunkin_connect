@@ -18,8 +18,12 @@ public class Plugin extends JavaPlugin
 
   public void onEnable()
   {
-    getServer().getPluginManager().registerEvents(new ConnectionEventListener(mPlayersList), this);
-    getServer().getPluginManager().registerEvents(new GameEventListener(mPlayersList), this);
+    // Events
+    this.getServer().getPluginManager().registerEvents(new ConnectionEventListener(mPlayersList), this);
+    this.getServer().getPluginManager().registerEvents(new GameEventListener(mPlayersList), this);
+
+    // Commands
+    this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList));
 
     LOGGER.info("dunkin_connect enabled");
   }
