@@ -12,16 +12,23 @@ public class ConnectionEventListener implements Listener{
 
     private static final Logger LOGGER=Logger.getLogger("dunkin_connect");
     private ConnectedPlayersList mPlayersList;
+    private DbConnector mDbConnector;
 
 
-    public ConnectionEventListener(ConnectedPlayersList inPlayerListRef) {
+    public ConnectionEventListener(ConnectedPlayersList inPlayerListRef, DbConnector inDbConnectorRef) {
         mPlayersList = inPlayerListRef;
+        mDbConnector = inDbConnectorRef;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if(!mPlayersList.addPlayer(event.getPlayer().getName())) {
+        String pseudo = event.getPlayer().getName();
+        if(!mPlayersList.addPlayer(pseudo)) {
             LOGGER.warning("Tried to add player multiple times");
+        }
+
+        if(!mDbConnector.isPlayerInDb(pseudo)) {
+            mDbConnector.addPlayer(pseudo);
         }
     }
 

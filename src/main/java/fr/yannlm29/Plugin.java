@@ -23,12 +23,6 @@ public class Plugin extends JavaPlugin
   }
 
   public void onEnable() {
-    // Events
-    this.getServer().getPluginManager().registerEvents(new ConnectionEventListener(mPlayersList), this);
-    this.getServer().getPluginManager().registerEvents(new GameEventListener(mPlayersList), this);
-
-    // Commands
-    this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList));
 
     // Load config file
     mConfigFile.load();
@@ -44,6 +38,13 @@ public class Plugin extends JavaPlugin
       LOGGER.warning("Cannot connect to database: " + e.getMessage());
       this.getPluginLoader().disablePlugin(this);
     }
+
+    // Events
+    this.getServer().getPluginManager().registerEvents(new ConnectionEventListener(mPlayersList, mDbConnector), this);
+    this.getServer().getPluginManager().registerEvents(new GameEventListener(mPlayersList), this);
+
+    // Commands
+    this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList));
     
     // Log "enable"
     LOGGER.info("dunkin_connect enabled");
