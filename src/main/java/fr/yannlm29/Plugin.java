@@ -9,15 +9,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Plugin extends JavaPlugin
 {
   private static final Logger LOGGER=Logger.getLogger("dunkin_connect");
-  ConnectedPlayersList mPlayersList;
+  private ConnectedPlayersList mPlayersList;
+  private ConfigFile mConfigFile;
+
 
   public Plugin() {
     super();
+
+    mConfigFile = new ConfigFile(this);
     mPlayersList = new ConnectedPlayersList();
   }
 
-  public void onEnable()
-  {
+  public void onEnable() {
     // Events
     this.getServer().getPluginManager().registerEvents(new ConnectionEventListener(mPlayersList), this);
     this.getServer().getPluginManager().registerEvents(new GameEventListener(mPlayersList), this);
@@ -25,11 +28,14 @@ public class Plugin extends JavaPlugin
     // Commands
     this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList));
 
+    // Load config file
+    mConfigFile.load();
+
+    // Log "enable"
     LOGGER.info("dunkin_connect enabled");
   }
 
-  public void onDisable()
-  {
+  public void onDisable() {
     LOGGER.info("dunkin_connect disabled");
   }
 }
