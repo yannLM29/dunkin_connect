@@ -44,7 +44,7 @@ public class Plugin extends JavaPlugin
     this.getServer().getPluginManager().registerEvents(new GameEventListener(mPlayersList), this);
 
     // Commands
-    this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList));
+    this.getCommand("getPlayers").setExecutor(new PlayersListCommand(mPlayersList, mDbConnector));
     
     // Log "enable"
     LOGGER.info("dunkin_connect enabled");
