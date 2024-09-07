@@ -135,15 +135,15 @@ public class DbConnector {
         }
     }
     
-    public Boolean updateBasePosition(String inPseudo, int inX, int inY, int inZ) {
+    public Boolean updateBasePosition(String inPseudo, double inX, double inY, double inZ) {
         
         String sql_get_player_query = "UPDATE players SET pos_x = ?, pos_y = ?, pos_z = ? WHERE pseudo = ?";
 
         try {
             PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
-            prepared_statement.setInt(1, inX);
-            prepared_statement.setInt(2, inY);
-            prepared_statement.setInt(3, inZ);
+            prepared_statement.setInt(1, (int)inX);
+            prepared_statement.setInt(2, (int)inY);
+            prepared_statement.setInt(3, (int)inZ);
             prepared_statement.setString(4, inPseudo);
 
             int result = prepared_statement.executeUpdate();
