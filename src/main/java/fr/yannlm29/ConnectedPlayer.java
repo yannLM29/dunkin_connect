@@ -12,6 +12,10 @@ public class ConnectedPlayer {
     }
 
     // -------------------- GET --------------------
+    public String getPseudo() {
+        return mPseudo;
+    }
+    
     public int getNumberOfKills() {
         return mNumberOfKills;
     }
