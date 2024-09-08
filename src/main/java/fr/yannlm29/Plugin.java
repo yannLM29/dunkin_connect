@@ -31,7 +31,7 @@ public class Plugin extends JavaPlugin
 
     // Connect to Db
     try {
-      mDbConnector.Connect(
+      mDbConnector.connect(
         mConfigFile.get().getString("database.ip"),
         mConfigFile.get().getInt("database.port"),
         mConfigFile.get().getString("database.user"),

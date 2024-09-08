@@ -19,7 +19,12 @@ public class DbConnector {
     private static final Logger LOGGER=Logger.getLogger("dunkin_connect");
     Connection mConnection = null;
 
-    public void Connect(String inIp, int inPort, String inUsername, String inPassword) throws Exception, ClassNotFoundException, SQLException {
+    private String lastIp;
+    private int lastPort;
+    private String lastUsername;
+    private String lastPassword;
+
+    public void connect(String inIp, int inPort, String inUsername, String inPassword) throws Exception, ClassNotFoundException, SQLException {
         if(inIp == null || inUsername == null || inPassword == null) {
             throw new Exception("Database config is wrong");
         }
@@ -28,10 +33,26 @@ public class DbConnector {
 
         Class.forName("com.mysql.cj.jdbc.Driver");
         mConnection = DriverManager.getConnection(url, inUsername, inPassword);
-    }
 
+        lastIp = inIp;
+        lastPort = inPort;
+        lastUsername = inUsername;
+        lastPassword = inPassword;
+    }
+    
+    public void checkConnection() {
+        try {
+            if(mConnection == null || mConnection.isClosed()) {
+                this.connect(lastIp, lastPort, lastUsername, lastPassword);
+            }
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+        }
+        
+    }
     // -------------------- GET --------------------
     public ArrayList<DbPlayer> getPlayerList() {
+        checkConnection();
         ArrayList<DbPlayer> players = new ArrayList<DbPlayer>();
 
         try {
@@ -53,6 +74,8 @@ public class DbConnector {
     }
 
     public DbPlayer getPlayerInfo(String inPseudo) {
+        checkConnection();
+
         if(!isPlayerInDb(inPseudo)) {
             LOGGER.info("Player not found: " + inPseudo);
             return null;
@@ -83,6 +106,7 @@ public class DbConnector {
     }
     
     public Boolean isPlayerInDb(String inPseudo) {
+        checkConnection();
         String sql_get_player_query = "SELECT id, pseudo FROM players WHERE pseudo = ?";
         try {
             PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
@@ -100,6 +124,7 @@ public class DbConnector {
 
     // -------------------- SET --------------------
     public Boolean addPlayer(String inPseudo) {
+        checkConnection();
         String sql_get_player_query = "INSERT INTO players (pseudo) VALUES (?)";
         try {
             PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
@@ -117,7 +142,7 @@ public class DbConnector {
     }
 
     public Boolean updatePlayer(String inPseudo, int inNbOfKills, int inNbOfDeath) {
-        
+        checkConnection();
         String sql_get_player_query = "UPDATE players SET nb_of_kills = ?, nb_of_deaths = ? WHERE pseudo = ?";
 
         try {
@@ -136,7 +161,7 @@ public class DbConnector {
     }
     
     public Boolean updateBasePosition(String inPseudo, double inX, double inY, double inZ) {
-        
+        checkConnection();
         String sql_get_player_query = "UPDATE players SET pos_x = ?, pos_y = ?, pos_z = ? WHERE pseudo = ?";
 
         try {
@@ -156,9 +181,10 @@ public class DbConnector {
     }
 
     public Boolean addSession(String inPseudo, Date inStart, long inDuration) {
+        checkConnection();
         String sql_get_player_query = "INSERT INTO session (pseudo, start, duration) VALUES (?, ?, ?)";
         
-        LOGGER.info("addSession with " + inStart + " " + inDuration);
+        // LOGGER.info("addSession with " + inStart + " " + inDuration);
         try {
             PreparedStatement prepared_statement = mConnection.prepareStatement(sql_get_player_query);
             prepared_statement.setString(1, inPseudo);
